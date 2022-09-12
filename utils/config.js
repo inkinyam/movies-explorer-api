@@ -6,7 +6,7 @@ const JWT_LIFE_LENGTH = '7d';
 const SALT_LENGTH = 10;
 
 const allowedCors = {
-  origin: ['http://inkinyam.nomoredomains.sbs', 'https://inkinyam.nomoredomains.sbs', 'http://api.inkinyam.nomoredomains.sbs', 'https://api.inkinyam.nomoredomains.sbs'],
+  origin: ['http://movies.inkinyam.nomoredomains.sbs', 'https://movies.inkinyam.nomoredomains.sbs', 'http://api.movies.inkinyam.nomoredomains.sbs', 'https://api.movies.inkinyam.nomoredomains.sbs'],
   credentials: true,
 };
 
