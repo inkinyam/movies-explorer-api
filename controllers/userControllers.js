@@ -50,8 +50,8 @@ const loginUser = (req, res, next) => {
     .then((user) => {
       const token = jwt.sign(
         { _id: user._id },
-        NODE_ENV === 'production' ? SECRETKEY : PRODACTION_SECRET_KEY,
-        { expiresIn: JWT_LIFE_LENGTH },
+        NODE_ENV === 'production' ? SECRETKEY : 'secret',
+        { expiresIn: '7d' },
       );
       res.status(OK).send({ jwt: token });
     })
