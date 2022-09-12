@@ -50,7 +50,7 @@ const loginUser = (req, res, next) => {
     .then((user) => {
       const token = jwt.sign(
         { _id: user._id },
-        PRODACTION_SECRET_KEY,
+        NODE_ENV === 'production' ? SECRETKEY : PRODACTION_SECRET_KEY,
         { expiresIn: JWT_LIFE_LENGTH },
       );
       res.status(OK).send({ jwt: token });
@@ -62,12 +62,10 @@ const loginUser = (req, res, next) => {
 const getUserData = (req, res, next) => {
   User.findById(req.user._id)
     .then((user) => {
-      const token = jwt.sign(
-        { _id: user._id },
-        NODE_ENV === 'production' ? SECRETKEY : PRODACTION_SECRET_KEY,
-        { expiresIn: '7d' },
-      );
-      res.status(OK).send({ jwt: token });
+      if (!user) {
+        return next(new ErrNotFound('Пользователь с указанным _id не найден'));
+      }
+      return res.status(OK).send(user);
     })
     .catch(next);
 };
