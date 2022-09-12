@@ -14,7 +14,7 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const { ErrNotFound } = require('./errors/errors');
 
-const { DATABASE_URL } = require('./utils/config');
+const { DATABASE_URL, allowedCors } = require('./utils/config');
 
 const { PORT = 3002 } = process.env;
 
@@ -22,7 +22,7 @@ mongoose.connect(DATABASE_URL);
 
 const app = express();
 
-app.use(cors());
+app.use(cors(allowedCors));
 
 app.use(helmet());
 app.use(limiter); // защита от ддос атак
