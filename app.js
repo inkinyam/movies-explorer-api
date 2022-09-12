@@ -15,12 +15,12 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { ErrNotFound } = require('./errors/errors');
 
 const { DATABASE_URL } = require('./utils/config');
-const { PORT = 3000 } = process.env;
+
+const { PORT = 3002 } = process.env;
 
 mongoose.connect(DATABASE_URL);
 
 const app = express();
-
 
 app.use(cors());
 
@@ -38,8 +38,8 @@ app.get('/crash-test', () => {
   }, 0);
 });
 
+app.use(require('./routes/login'));
 
-app.use(require('./routes/login'))
 app.use(auth);
 app.use(require('./routes/userRoutes'));
 app.use(require('./routes/movieRoutes'));
