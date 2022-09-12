@@ -7,7 +7,7 @@ const User = require('../models/userModel');
 const { CREATED, OK } = require('../utils/statuses');
 
 const { SECRETKEY, NODE_ENV } = process.env;
-const { PRODACTION_SECRET_KEY, JWT_LIFE_LENGTH, SALT_LENGTH } = require('../utils/config');
+const { PRODACTION_SECRET_KEY, SALT_LENGTH } = require('../utils/config');
 const { ErrBadRequest, ErrConflict, ErrNotFound } = require('../errors/errors');
 
 // регистрация нового пользователя
@@ -50,7 +50,7 @@ const loginUser = (req, res, next) => {
     .then((user) => {
       const token = jwt.sign(
         { _id: user._id },
-        NODE_ENV === 'production' ? SECRETKEY : 'secret',
+        NODE_ENV === 'production' ? SECRETKEY : PRODACTION_SECRET_KEY,
         { expiresIn: '7d' },
       );
       res.status(OK).send({ jwt: token });
