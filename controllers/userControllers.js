@@ -31,7 +31,7 @@ const registerUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError' || err.name === 'ValidationError') {
-        next(new ErrBadRequest({ message: errBadRequestMessage }));
+        next(new ErrBadRequest(errBadRequestMessage));
         return;
       }
       if (err.code === 11000) {
@@ -83,11 +83,13 @@ const updateUserData = (req, res, next) => {
       return res.status(OK).send({ user });
     })
     .catch((err) => {
-      if (err.code === 11000) {
-        next(new ErrConflict(errConflictMessage));
-        return;
+      if (err.name === 'ValidationError') {
+        next(new ErrBadRequest(errBadRequestMessage));
       }
-      next(err);
+      if (err.code === 11000) {
+        return next(new ErrConflict(errConflictMessage));
+      }
+      return next(err);
     });
 };
 
