@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+const validator = require('validator');
+
 const { Schema } = mongoose;
 
 const movieSchema = new Schema(
@@ -27,17 +29,23 @@ const movieSchema = new Schema(
     image: {
       type: String,
       required: true,
-      validate: /https?:\/\/(www)?[0-9a-z\-._~:/?#[\]@!$&'()*+,;=]+#?$/i,
+      validate: {
+        validator: validator.isURL,
+      },
     },
     trailerLink: {
       type: String,
       required: true,
-      validate: /https?:\/\/(www)?[0-9a-z\-._~:/?#[\]@!$&'()*+,;=]+#?$/i,
+      validate: {
+        validator: validator.isURL,
+      },
     },
     thumbnail: {
       type: String,
       required: true,
-      validate: /https?:\/\/(www)?[0-9a-z\-._~:/?#[\]@!$&'()*+,;=]+#?$/i,
+      validate: {
+        validator: validator.isURL,
+      },
     },
     owner: {
       type: mongoose.Schema.Types.ObjectId,

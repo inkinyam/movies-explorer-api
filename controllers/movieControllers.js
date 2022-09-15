@@ -5,6 +5,12 @@ const {
   ErrBadRequest, ErrNotFound, ErrForbidden,
 } = require('../errors/errors');
 
+const {
+  errBadRequestMessage,
+  errFrobiddenMessage,
+  errNotFoundMessage,
+} = require('../utils/errorsMessages');
+
 // создаем новую карточку фильма
 const addMovies = (req, res, next) => {
   const {
@@ -39,7 +45,7 @@ const addMovies = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new ErrBadRequest('Вы указали некорректные данные при создании фильма'));
+        next(new ErrBadRequest(errBadRequestMessage));
         return;
       }
       next(err);
@@ -59,11 +65,11 @@ const getMovies = (req, res, next) => {
 const deleteMovie = (req, res, next) => {
   Movie.findById(req.params._id)
     .orFail(() => {
-      throw new ErrNotFound('Фильм с указанным _id не найден');
+      throw new ErrNotFound(errNotFoundMessage);
     })
     .then((movie) => {
       if (!movie.owner.equals(req.user._id)) {
-        return next(new ErrForbidden('Нельзя удалить фильм, который был добавлен не Вами'));
+        return next(new ErrForbidden(errFrobiddenMessage));
       }
       return Movie.deleteOne(movie)
         .then(() => {

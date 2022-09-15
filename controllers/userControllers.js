@@ -10,6 +10,8 @@ const { SECRETKEY, NODE_ENV } = process.env;
 const { PRODACTION_SECRET_KEY, JWT_LIFE_LENGTH, SALT_LENGTH } = require('../utils/config');
 const { ErrBadRequest, ErrConflict, ErrNotFound } = require('../errors/errors');
 
+const { errBadRequestMessage, errConflictMessage, errNotFoundMessage } = require('../utils/errorsMessages');
+
 // регистрация нового пользователя
 const registerUser = (req, res, next) => {
   const {
@@ -29,11 +31,11 @@ const registerUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError' || err.name === 'ValidationError') {
-        next(new ErrBadRequest({ message: 'Вы указали некорректные данные при создании пользователя' }));
+        next(new ErrBadRequest({ message: errBadRequestMessage }));
         return;
       }
       if (err.code === 11000) {
-        next(new ErrConflict('Пользователь с таким email уже существует'));
+        next(new ErrConflict(errConflictMessage));
         return;
       }
       next(err);
@@ -63,7 +65,7 @@ const getUserData = (req, res, next) => {
   User.findById(req.user._id)
     .then((user) => {
       if (!user) {
-        return next(new ErrNotFound('Пользователь с указанным _id не найден'));
+        return next(new ErrNotFound(errNotFoundMessage));
       }
       return res.status(OK).send(user);
     })
@@ -76,13 +78,13 @@ const updateUserData = (req, res, next) => {
   User.findByIdAndUpdate(req.user._id, { name, email }, { new: true, runValidators: true })
     .then((user) => {
       if (!user) {
-        return next(new ErrNotFound('Пользователь с указанным _id не найден'));
+        return next(new ErrNotFound(errNotFoundMessage));
       }
       return res.status(OK).send({ user });
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
-        next(new ErrBadRequest('Вы указали некорректные данные при обновлении данных пользователя'));
+      if (err.code === 11000) {
+        next(new ErrConflict(errConflictMessage));
         return;
       }
       next(err);
