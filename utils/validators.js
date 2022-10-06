@@ -21,6 +21,7 @@ const loginUserValidator = celebrate({
 // валидирование емал, пароля для регистрации пользователя
 const registerUserValidator = celebrate({
   body: Joi.object().keys({
+    name: Joi.string().min(2).max(30).required(),
     email: Joi.string().required().email(),
     password: Joi.string().required(),
   }),
